@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#8fd6ee">
+    <title>2048 Bloom</title>
+    <link rel="stylesheet" href="styles.css?v=2">
+  </head>
+  <body>
+    <main class="app-shell" aria-label="2048 Bloom puzzle game">
+      <section class="game-card" aria-labelledby="game-title">
+        <header class="game-header">
+          <div class="brand">
+            <div class="brand-mark" aria-hidden="true">
+              <span>2</span><span>0</span><span>4</span><span>8</span>
+            </div>
+            <div>
+              <h1 id="game-title">Bloom</h1>
+              <p>Merge numbers, grow the garden.</p>
+            </div>
+          </div>
+
+          <div class="scorebar" aria-live="polite">
+            <article class="score-card">
+              <span>Score</span>
+              <strong id="score">0</strong>
+            </article>
+            <article class="score-card best-card">
+              <span>Best</span>
+              <strong id="best-score">0</strong>
+            </article>
+            <button class="new-game-button" id="new-game" type="button">
+              <span aria-hidden="true">✿</span>
+              New Game
+            </button>
+          </div>
+        </header>
+
+        <div class="play-layout">
+          <aside class="helper-panel" aria-label="Controls">
+            <div class="sprout-face" aria-hidden="true">
+              <span class="sprout-leaf"></span>
+              <span class="sprout-eye left"></span>
+              <span class="sprout-eye right"></span>
+              <span class="sprout-mouth"></span>
+            </div>
+            <p>Use arrow keys, WASD, or swipe the board.</p>
+            <div class="key-row" aria-hidden="true">
+              <span>W</span><span>A</span><span>S</span><span>D</span>
+            </div>
+          </aside>
+
+          <section class="board-wrap" aria-label="2048 board">
+            <div class="board" id="board" tabindex="0" aria-label="Game board. Use arrow keys, WASD, or swipe to move tiles.">
+              <div class="grid" aria-hidden="true"></div>
+              <div class="tile-layer" id="tile-layer" aria-hidden="true"></div>
+            </div>
+            <p class="board-caption">Every valid move plants a fresh 2 or 4.</p>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <div class="modal" id="modal" aria-hidden="true">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-message">
+        <div class="modal-sprout" aria-hidden="true"></div>
+        <h2 id="modal-title">You Win!</h2>
+        <p id="modal-message">You reached 2048. Keep going to beat your best score.</p>
+        <div class="modal-actions">
+          <button class="keep-playing-button" id="keep-playing" type="button">Keep Playing</button>
+          <button class="modal-new-game-button" id="modal-new-game" type="button">New Game</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
