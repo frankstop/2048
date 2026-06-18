@@ -1,7 +1,7 @@
 const SIZE = 4;
 const WIN_VALUE = 2048;
 const STORAGE_KEY = "twenty48-bloom-best";
-const MOVE_MS = 170;
+const MOVE_MS = 240;
 
 const boardEl = document.querySelector("#board");
 const gridEl = document.querySelector(".grid");
@@ -106,6 +106,7 @@ function render() {
     tileEl.className = "tile";
     if (tile.fresh) tileEl.classList.add("spawn");
     if (tile.merged) tileEl.classList.add("merge");
+    if (tile.removeAfterMove) tileEl.classList.add("merge-source");
     tileEl.dataset.value = String(tile.value);
     const startCol = tile.fresh ? tile.col : tile.previousCol;
     const startRow = tile.fresh ? tile.row : tile.previousRow;
@@ -114,6 +115,7 @@ function render() {
     tileEl.innerHTML = `<span>${tile.value}</span>`;
     tileLayer.append(tileEl);
     if (!tile.fresh && (startCol !== tile.col || startRow !== tile.row)) {
+      tileEl.getBoundingClientRect();
       requestAnimationFrame(() => {
         tileEl.style.setProperty("--x", tile.col);
         tileEl.style.setProperty("--y", tile.row);
@@ -145,11 +147,23 @@ function move(direction) {
   render();
 
   window.setTimeout(() => {
+    finalizeMoveTiles();
     addRandomTile();
     render();
     locked = false;
     checkGameState();
   }, MOVE_MS);
+}
+
+function finalizeMoveTiles() {
+  for (const tile of [...tiles.values()]) {
+    if (tile.removeAfterMove) {
+      tiles.delete(tile.id);
+      continue;
+    }
+    delete tile.removeAfterMove;
+    delete tile.mergeTarget;
+  }
 }
 
 function buildMove(direction) {
@@ -186,6 +200,10 @@ function buildMove(direction) {
       if (tile.row !== destination.row || tile.col !== destination.col) moved = true;
       tile.row = destination.row;
       tile.col = destination.col;
+      if (tile.mergeTarget) {
+        tile.mergeTarget.row = destination.row;
+        tile.mergeTarget.col = destination.col;
+      }
       nextBoard[destination.row][destination.col] = tile;
     });
   }
@@ -193,10 +211,7 @@ function buildMove(direction) {
   for (const tile of tiles.values()) {
     if (tile.removeAfterMove) {
       moved = true;
-      tiles.delete(tile.id);
     }
-    delete tile.removeAfterMove;
-    delete tile.mergeTarget;
   }
 
   if (!moved) {

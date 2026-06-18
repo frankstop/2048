@@ -5,7 +5,7 @@
   --radius-lg: 32px;
   --radius-md: 22px;
   --radius-sm: 16px;
-  --move-duration: 160ms;
+  --move-duration: 230ms;
   --pop-duration: 180ms;
   --bg: #8fd6ee;
   --ink: #4b271b;
@@ -403,8 +403,11 @@ h1 {
   font-weight: 900;
   line-height: 1;
   text-shadow: 0 2px rgba(255, 255, 255, 0.58);
-  transform: translate(calc(var(--x) * (var(--tile-size) + var(--gap))), calc(var(--y) * (var(--tile-size) + var(--gap))));
-  transition: transform var(--move-duration) cubic-bezier(0.2, 0.82, 0.24, 1);
+  transform: translate3d(calc(var(--x) * (var(--tile-size) + var(--gap))), calc(var(--y) * (var(--tile-size) + var(--gap))), 0);
+  transition:
+    transform var(--move-duration) cubic-bezier(0.16, 0.88, 0.22, 1),
+    opacity 120ms ease;
+  will-change: transform;
   box-shadow:
     inset 0 4px rgba(255, 255, 255, 0.42),
     inset 0 -5px rgba(88, 55, 38, 0.16),
@@ -487,7 +490,13 @@ h1 {
 }
 
 .tile.merge {
+  z-index: 3;
   animation: merge var(--pop-duration) cubic-bezier(0.2, 1.4, 0.28, 1) both;
+}
+
+.tile.merge-source {
+  z-index: 2;
+  animation: merge-source var(--move-duration) cubic-bezier(0.16, 0.88, 0.22, 1) both;
 }
 
 .board-caption {
@@ -587,6 +596,21 @@ h1 {
   0% { scale: 1; }
   55% { scale: 1.17; }
   100% { scale: 1; }
+}
+
+@keyframes merge-source {
+  0% {
+    opacity: 1;
+    scale: 1;
+  }
+  72% {
+    opacity: 0.96;
+    scale: 1;
+  }
+  100% {
+    opacity: 0;
+    scale: 0.92;
+  }
 }
 
 @media (max-width: 880px) {
